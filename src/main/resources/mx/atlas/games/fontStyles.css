@@ -1,0 +1,9 @@
+@font-face {
+    src: url('fonts/Cream_Cake.otf');
+}
+
+.title {
+    -fx-font-family: 'Cream Cake';
+    -fx-font-size: 40;
+    -fx-font-weight:bold;
+}
