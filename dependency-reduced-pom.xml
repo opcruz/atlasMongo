@@ -4,7 +4,7 @@
   <groupId>mx.mongodb</groupId>
   <artifactId>atlas-games-sales</artifactId>
   <name>atlas-games-sales</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <description>Games Sales using Atlas Server</description>
   <build>
     <plugins>

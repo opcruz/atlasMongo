@@ -1,10 +1,6 @@
 package mx.atlas.games.controllers;
 
-import mx.atlas.games.db.Connection;
-import mx.atlas.games.dtos.GameSale;
-import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -20,6 +16,8 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
+import mx.atlas.games.db.Connection;
+import mx.atlas.games.dtos.GameSale;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -85,7 +83,6 @@ public class GameSaleController {
         BooleanBinding selectedItemBinding = Bindings.isNull(gameTable.getSelectionModel().selectedItemProperty());
         deleteButton.disableProperty().bind(selectedItemBinding);
         duplicateButton.disableProperty().bind(selectedItemBinding);
-
 
         columnTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         columnTitle.setOnEditCommit(event -> {
@@ -191,16 +188,9 @@ public class GameSaleController {
     }
 
     private void loadTableData(MongoCollection<GameSale> collection) {
-        ObservableList<GameSale> data = FXCollections.observableArrayList();
-
-        try (MongoCursor<GameSale> cursor = collection.find().sort(orderBy(ascending("rank"))).iterator()) {
-            while (cursor.hasNext()) {
-                GameSale gameSale = cursor.next();
-                data.add(gameSale);
-            }
-        } catch (MongoException me) {
-            System.err.println("Unable to find any recipes in MongoDB due to an error: " + me);
-        }
+        ObservableList<GameSale> data = collection.find()
+                .sort(orderBy(ascending("rank")))
+                .into(FXCollections.observableArrayList());
 
         gameTable.setItems(data);
     }
@@ -245,6 +235,5 @@ public class GameSaleController {
         gameTable.scrollTo(gameTable.getItems().size() - 1);
         gameTable.edit(gameTable.getItems().size() - 1, columnTitle);
     }
-
 
 }
