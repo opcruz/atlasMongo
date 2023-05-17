@@ -40,7 +40,7 @@ public class GamesSalesApplication extends Application {
 
         stage.setTitle("Games Sales");
         stage.setScene(scene);
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon/img.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon/icon.png"))));
         stage.show();
     }
 

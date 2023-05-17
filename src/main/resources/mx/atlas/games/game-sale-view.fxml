@@ -8,6 +8,9 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -16,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="479.0" prefWidth="836.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.atlas.games.controllers.GameSaleController">
+<BorderPane prefHeight="479.0" prefWidth="836.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.atlas.games.controllers.GameSaleController">
     <left>
         <VBox prefHeight="354.0" prefWidth="130.0" BorderPane.alignment="CENTER">
          <children>
@@ -87,13 +90,24 @@
       </VBox>
     </left>
     <top>
-        <HBox prefHeight="46.0" prefWidth="600.0" style="-fx-background-color: #9925be;" BorderPane.alignment="CENTER">
+        <HBox prefHeight="47.0" prefWidth="836.0" style="-fx-background-color: #9925be;" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="49.0" prefWidth="180.0" styleClass="title" stylesheets="@fontStyles.css" text="Games Sales" textAlignment="CENTER" textFill="WHITE">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="84.0" prefWidth="180.0" styleClass="title" stylesheets="@fontStyles.css" text="Games Sales" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="51.0" />
                </font>
             </Label>
+            <ImageView cache="true" fitHeight="61.0" fitWidth="47.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/mario.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+               <HBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </HBox.margin>
+            </ImageView>
          </children></HBox>
     </top>
     <center>
