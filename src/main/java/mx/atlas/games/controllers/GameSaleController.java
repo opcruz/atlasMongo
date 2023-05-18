@@ -18,6 +18,7 @@ import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
 import mx.atlas.games.db.Connection;
 import mx.atlas.games.dtos.GameSale;
+import mx.atlas.games.utils.Try;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -31,6 +32,10 @@ import static com.mongodb.client.model.Sorts.orderBy;
 
 public class GameSaleController {
 
+    @FXML
+    public TextField rankingGreater;
+    @FXML
+    public TextField rankingLower;
     @FXML
     private TableView<GameSale> gameTable;
     @FXML
@@ -47,6 +52,8 @@ public class GameSaleController {
     public TableColumn<GameSale, String> columnDevelopers;
     @FXML
     public TableColumn<GameSale, String> columnReleaseDate;
+    @FXML
+    public TableColumn<GameSale, String> columnPublishers;
     @FXML
     public Button updateButton;
     @FXML
@@ -75,7 +82,10 @@ public class GameSaleController {
         columnPlatform.setCellValueFactory(x -> new SimpleStringProperty(x.getValue().getPlatforms()));
         columnDevelopers.setCellValueFactory(x -> new SimpleStringProperty(x.getValue().getDevelopers()));
         columnReleaseDate.setCellValueFactory(x -> new SimpleStringProperty(x.getValue().getReleaseDate()));
+        columnPublishers.setCellValueFactory(x -> new SimpleStringProperty(x.getValue().getPublishers()));
 
+        numericOnly(rankingGreater);
+        numericOnly(rankingLower);
 
         BooleanBinding updateBinding = Bindings.createBooleanBinding(editedRows::isEmpty, editedRows);
         updateButton.disableProperty().bind(updateBinding);
@@ -126,6 +136,13 @@ public class GameSaleController {
             editedRows.put(rowValue.getId(), rowValue);
         });
 
+        columnPublishers.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnPublishers.setOnEditCommit(event -> {
+            GameSale rowValue = event.getRowValue();
+            rowValue.setPublishers(event.getNewValue());
+            editedRows.put(rowValue.getId(), rowValue);
+        });
+
         ObservableList<String> platformsFilter =
                 collection.distinct("platforms", String.class)
                         .into(FXCollections.observableArrayList());
@@ -157,6 +174,8 @@ public class GameSaleController {
         cbDevelopers.setValue(developersFilter.get(0));
         cbDevelopers.setOnAction(x -> applyFilter());
         tfTitle.setOnAction(x -> applyFilter());
+        rankingGreater.setOnAction(x -> applyFilter());
+        rankingLower.setOnAction(x -> applyFilter());
 
         loadTableData(collection);
     }
@@ -176,6 +195,14 @@ public class GameSaleController {
                     Pattern pattern = Pattern.compile(value, Pattern.CASE_INSENSITIVE);
                     return Filters.regex("title", pattern);
                 }).ifPresent(filters::add);
+
+        (rankingGreater.getText().isEmpty() ? Optional.<Integer>empty() : Try.of(() -> Integer.parseInt(rankingGreater.getText())).toOptional())
+                .map(value -> Filters.gt("rank", value))
+                .ifPresent(filters::add);
+
+        (rankingLower.getText().isEmpty() ? Optional.<Integer>empty() : Try.of(() -> Integer.parseInt(rankingLower.getText())).toOptional())
+                .map(value -> Filters.lt("rank", value))
+                .ifPresent(filters::add);
 
         Bson filter = filters.isEmpty() ? new Document() : Filters.and(filters);
 
@@ -234,6 +261,14 @@ public class GameSaleController {
         gameTable.getSelectionModel().selectLast();
         gameTable.scrollTo(gameTable.getItems().size() - 1);
         gameTable.edit(gameTable.getItems().size() - 1, columnTitle);
+    }
+
+    public static void numericOnly(final TextField field) {
+        field.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                field.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
     }
 
 }

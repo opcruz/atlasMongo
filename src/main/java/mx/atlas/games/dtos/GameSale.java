@@ -20,6 +20,7 @@ public class GameSale {
     @BsonProperty("release_date")
     private String releaseDate;
     private String developers;
+    private String publishers;
     @BsonIgnore
     private boolean insert = false;
 
@@ -33,6 +34,7 @@ public class GameSale {
         gameSale.setPlatforms(platforms);
         gameSale.setReleaseDate(releaseDate);
         gameSale.setDevelopers(developers);
+        gameSale.setPublishers(publishers);
 
         return gameSale;
     }
